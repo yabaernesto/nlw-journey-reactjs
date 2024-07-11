@@ -1,7 +1,24 @@
 import { CircleDashed, UserCog } from "lucide-react";
 import { Button } from "../../components/Button";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/axios";
+
+interface Participant {
+  id: string;
+  name: string | null;
+  email: string;
+  is_confirmed: boolean;
+}
 
 export function Guests() {
+  const { tripId } = useParams()
+  const [participants, setParticipants] = useState<Participant[]>([])
+
+  useEffect(() => {
+    api.get(`/trips/${tripId}/invites`).then((reponse) => setParticipants(reponse.data.participants))
+  }, [tripId])
+  
   return (
     <div className="space-y-6">
       <h2 className="font-semibold text-xl">Convidados</h2>
